@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../entities/User";
 import { Entity } from "typeorm";
+import { hashPassword } from "../../utils/hash";
 
 interface BodyType {
     name: string,
@@ -13,12 +14,14 @@ interface BodyType {
 export async function registerUserHandler(req: FastifyRequest, reply: FastifyReply) {
     const {name, lastname, email, password} = <BodyType>req.body;
 
+    const {hash, salt} = hashPassword(password)
+
     const user = User.create({
         name: name,
         lastname: lastname,
         email: email,
-        password: password,
-        salt:"123"
+        password: hash,
+        salt: salt
     })
 
     await user.save()
@@ -30,6 +33,7 @@ export async function getUsersHandler(req: FastifyRequest, reply: FastifyReply) 
         select: {
             name: true,
             lastname: true,
+            email: true
         },
     })
 
