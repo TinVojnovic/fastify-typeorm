@@ -1,9 +1,8 @@
 import { FastifyInstance } from "fastify";
-import { createAdressHandler, getAdressHandler } from "./adress.controller";
+import { addAdress, getAdressHandler } from "./adress.controller";
 
 async function adressRoutes(server: FastifyInstance) {
-    server.post('/createAdress', createAdressHandler)
-
+    server.post('/addAdress', addAdress)
     server.get('/fetchAdresses', getAdressHandler)
 }
 

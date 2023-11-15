@@ -6,6 +6,7 @@ import { Product } from './modules/entities/Product';
 import fastifyJwt, { JWT } from '@fastify/jwt';
 import productRoutes from './modules/product/product.routes';
 import { Adress } from './modules/entities/Adress';
+import adressRoutes from './modules/Adress/adress.routes';
 
 //TODO Make environment variables 
 
@@ -59,6 +60,7 @@ server.addHook('preHandler', (req, res, next) => {
 
 server.register(userRoutes, { prefix: 'api/users' })
 server.register(productRoutes, { prefix: 'api/products' })
+server.register(adressRoutes, { prefix: 'api/adresses' })
 
 
 declare module "fastify" {

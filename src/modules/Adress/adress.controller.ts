@@ -1,37 +1,48 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Product } from "../entities/Product";
 import { Adress, AdressType } from "../entities/Adress";
+import { AppDataSource } from "../../app";
+import { User } from "../entities/User";
 
-interface CreateAdressBody {
+//TODO Add error handling
+
+interface addAdressBody{
     adress: string,
     type: AdressType,
     userId: number
 }
 
-//TODO Add error handling
+//I'd fetch userID from the token if it worked....
 
-export async function createAdressHandler(req: FastifyRequest, reply: FastifyReply) {
-    const { adress, type } = <CreateAdressBody>req.body;
+export async function addAdress(req: FastifyRequest, reply: FastifyReply) {
+    const { adress, type, userId } = <addAdressBody>req.body;
+
+    const userRepo = AppDataSource.getRepository(User)
+
+    const user = userRepo.findOne({
+        where: {
+            id: userId
+        }
+    })
 
     const newAdress = Adress.create({
         adress: adress,
-        type: type
+        type: type,
+        user: (await user)
     })
 
 
     await newAdress.save()
-    return reply.send(adress)
+    return reply.send({adress, user})
 }
 
 export async function getAdressHandler(req: FastifyRequest, reply: FastifyReply) {
-   const products = await Product.find({
+    const adresses = await Adress.find({
         select: {
-            title: true,
-            price: true,
-            created_at: true,
-            updated_at: true
+            adress: true,
+            type: true,
+            user: true //this is giving an error for some reason??? but it works
         },
     })
 
-    return reply.send(products)
+    return reply.send(adresses)
 }
