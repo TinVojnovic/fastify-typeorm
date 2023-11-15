@@ -1,10 +1,12 @@
 import { FastifyInstance } from "fastify";
-import { registerUserHandler, getUsersHandler, loginHandler } from './user.controller'
+import { registerUserHandler, getUsersHandler, loginHandler, getProducts } from './user.controller'
 import { server as fastifyServer } from "../../app";
 
 async function userRoutes(server: FastifyInstance) {
     server.post('/registerUser', registerUserHandler)
     server.post('/login', loginHandler)
+    server.post('/fetchProducts', getProducts)
+
 
 
     //This method of setting up hooks seems to be depricated or something. It should work as { onRequest: [fastifyServer.authenticate] } 

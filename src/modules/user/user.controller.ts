@@ -20,6 +20,10 @@ interface LoginBody {
     password: string
 }
 
+interface userIdBody {
+    userId: number
+}
+
 //TODO Add error handling
 
 export async function registerUserHandler(req: FastifyRequest, reply: FastifyReply) {
@@ -40,7 +44,7 @@ export async function registerUserHandler(req: FastifyRequest, reply: FastifyRep
         email: email,
         password: hash,
         salt: salt,
-        adresses: [ homeAdress ]
+        adresses: [homeAdress]
     })
 
 
@@ -81,6 +85,31 @@ export async function loginHandler(req: FastifyRequest, reply: FastifyReply) {
     }
 
     return reply.send((await user).email)
+}
+
+export async function getProducts(req: FastifyRequest, reply: FastifyReply) {
+    const { userId } = <userIdBody>req.body;
+
+    const userRepo = AppDataSource.getRepository(User)
+
+    const user = userRepo.findOne({
+        where: {
+            id: userId,
+        },
+        relations: ['adresses', 'adresses.products']
+    });
+
+    const { adresses } = (await user);
+
+    const products = [];
+
+    adresses.forEach(adress => {
+        products.push(...adress.products)
+    });
+
+
+    return reply.send({ products })
+
 }
 
 //I would've made it so you don't need to pass the userID into the body of the request
