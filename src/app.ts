@@ -19,7 +19,6 @@ const AppDataSource = new DataSource({
     username: "root",
     password: "123",
     database: "test",
-    logging: true,
     synchronize: true,
     entities: [User, Product]
 })
@@ -33,21 +32,21 @@ AppDataSource.initialize()
     })
 
 
-const server = fastify()
+export const server = fastify()
 
 server.get('/check', async function () {
     return { status: "OK" }
 })
 
+server.register(userRoutes, { prefix: 'api/users' })
 
 async function main() {
 
-    server.register(userRoutes, { prefix: 'api/users' })
 
     try {
-        let conn = await pool.getConnection();
+        await server.listen({ port: 3000, host: '127.0.0.1' })
 
-        await server.listen(3000, '0.0.0.0')
+        await server.ready()
         console.log("radi")
 
     } catch (error) {
@@ -55,5 +54,6 @@ async function main() {
         process.exit(1)
     }
 }
+
 
 main()
