@@ -19,8 +19,8 @@ interface LoginBody {
 }
 
 interface addProductBody {
-    productID: number,
-    userID: number
+    productId: number,
+    userId: number
 }
 
 //TODO Add error handling
@@ -102,7 +102,8 @@ export async function addProduct(req: FastifyRequest, reply: FastifyReply) {
         },
     });
 
-    (await user).products.push(await product)
+    (await user).products.push(await product);
+
     await userRepo.save(await user)
 
     return reply.send({user, product})

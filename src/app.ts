@@ -5,6 +5,7 @@ import { User } from './modules/entities/User';
 import { Product } from './modules/entities/Product';
 import fastifyJwt, { JWT } from '@fastify/jwt';
 import productRoutes from './modules/product/product.routes';
+import { Adress } from './modules/entities/Adress';
 
 //TODO Make environment variables 
 
@@ -24,7 +25,7 @@ export const AppDataSource = new DataSource({
     password: "123",
     database: "test",
     synchronize: true,
-    entities: [User, Product]
+    entities: [User, Product, Adress]
 })
 
 AppDataSource.initialize()
