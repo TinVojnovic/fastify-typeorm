@@ -1,8 +1,7 @@
 import fastify from 'fastify'
 import userRoutes from './modules/user/user.routes'
 import { DataSource } from 'typeorm'
-
-
+import { User } from './modules/entities/User';
 
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
@@ -11,6 +10,27 @@ const pool = mariadb.createPool({
     password: '123',
     database: 'test'
 });
+
+const AppDataSource = new DataSource({
+    type: "mariadb",
+    host: "localhost",
+    port: 3306,
+    username: "root",
+    password: "123",
+    database: "test",
+    logging: true,
+    synchronize: true,
+    entities: [User]
+})
+
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
+    })
+
 
 const server = fastify()
 
