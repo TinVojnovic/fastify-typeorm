@@ -4,13 +4,15 @@ import { DataSource, Entity } from "typeorm";
 import { hashPassword, verifyPassword } from "../../utils/hash";
 import { AppDataSource, server } from "../../app";
 import { Product } from "../entities/Product";
+import { Adress, AdressType } from "../entities/Adress";
 
 interface CreateUserBody {
     name: string,
     lastname: string,
     email: string,
     password: string,
-    salt: string
+    salt: string,
+    adress: string
 }
 
 interface LoginBody {
@@ -26,21 +28,29 @@ interface addProductBody {
 //TODO Add error handling
 
 export async function registerUserHandler(req: FastifyRequest, reply: FastifyReply) {
-    const { name, lastname, email, password } = <CreateUserBody>req.body;
+    const { name, lastname, email, password, adress } = <CreateUserBody>req.body;
 
     const { hash, salt } = hashPassword(password)
+
+    const homeAdress = Adress.create({
+        adress: adress,
+        type: AdressType.HOME
+    })
+
+    await homeAdress.save()
 
     const user = User.create({
         name: name,
         lastname: lastname,
         email: email,
         password: hash,
-        salt: salt
+        salt: salt,
+        adresses: [ homeAdress ]
     })
 
 
     await user.save()
-    return reply.send({ name, lastname, email })
+    return reply.send({ name, lastname, email, adress })
 }
 
 export async function getUsersHandler(req: FastifyRequest, reply: FastifyReply) {
@@ -106,5 +116,5 @@ export async function addProduct(req: FastifyRequest, reply: FastifyReply) {
 
     await userRepo.save(await user)
 
-    return reply.send({user, product})
+    return reply.send({ user, product })
 }
