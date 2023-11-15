@@ -2,6 +2,7 @@ import fastify from 'fastify'
 import userRoutes from './modules/user/user.routes'
 import { DataSource } from 'typeorm'
 import { User } from './modules/entities/User';
+import { Product } from './modules/entities/Product';
 
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
@@ -20,7 +21,7 @@ const AppDataSource = new DataSource({
     database: "test",
     logging: true,
     synchronize: true,
-    entities: [User]
+    entities: [User, Product]
 })
 
 AppDataSource.initialize()

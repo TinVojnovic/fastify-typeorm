@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToMany } from 'typeorm'
+import { Product } from './Product';
 
 @Entity()
 export class User extends BaseEntity {
@@ -18,4 +19,7 @@ export class User extends BaseEntity {
 
     @Column()
     password: string;
+
+    @ManyToMany((type) => Product, (product) => product.users)
+    products: Product[]
 }
