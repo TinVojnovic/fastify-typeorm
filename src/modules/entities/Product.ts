@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { User } from './User';
 import { Adress } from './Adress';
 
 @Entity()

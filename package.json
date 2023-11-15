@@ -16,6 +16,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@fastify/env": "^4.3.0",
     "@fastify/jwt": "^7.2.3",
     "fastify": "^4.24.3",
     "mariadb": "^3.2.2",

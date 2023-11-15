@@ -8,8 +8,6 @@ import productRoutes from './modules/product/product.routes';
 import { Adress } from './modules/entities/Adress';
 import adressRoutes from './modules/Adress/adress.routes';
 
-//TODO Make environment variables 
-
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
     host: 'localhost',
@@ -58,6 +56,7 @@ server.addHook('preHandler', (req, res, next) => {
     return next()
 })
 
+
 server.register(userRoutes, { prefix: 'api/users' })
 server.register(productRoutes, { prefix: 'api/products' })
 server.register(adressRoutes, { prefix: 'api/adresses' })
@@ -74,8 +73,6 @@ declare module "fastify" {
 }
 
 async function main() {
-
-
     try {
         await server.listen({ port: 3000, host: '127.0.0.1' })
 

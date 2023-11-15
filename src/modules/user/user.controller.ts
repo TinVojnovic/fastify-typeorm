@@ -87,6 +87,9 @@ export async function loginHandler(req: FastifyRequest, reply: FastifyReply) {
     return reply.send((await user).email)
 }
 
+//I would've made it so you don't need to pass the userID into the body of the request
+//by getting the user from the jwtToken, but authentication doesn't seem to work
+
 export async function getProducts(req: FastifyRequest, reply: FastifyReply) {
     const { userId } = <userIdBody>req.body;
 
@@ -107,38 +110,6 @@ export async function getProducts(req: FastifyRequest, reply: FastifyReply) {
         products.push(...adress.products)
     });
 
-
     return reply.send({ products })
 
 }
-
-//I would've made it so you don't need to pass the userID into the body of the request
-//by getting the user from the jwtToken, but authentication doesn't seem to work
-
-/*export async function addProduct(req: FastifyRequest, reply: FastifyReply) {
-    const { productId, userId } = <addProductBody>req.body;
-
-    const userRepo = AppDataSource.getRepository(User)
-    const productRepo = AppDataSource.getRepository(Product)
-
-    const product = productRepo.findOne({
-        where: {
-            id: productId,
-        },
-    });
-
-    const user = userRepo.findOne({
-        where: {
-            id: userId,
-        },
-        relations: {
-            products: true,
-        },
-    });
-
-    (await user).products.push(await product);
-
-    await userRepo.save(await user)
-
-    return reply.send({ user, product })
-}*/
