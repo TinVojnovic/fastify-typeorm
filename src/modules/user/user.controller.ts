@@ -26,7 +26,12 @@ export async function registerUserHandler(req: FastifyRequest, reply: FastifyRep
 }
 
 export async function getUsersHandler(req: FastifyRequest, reply: FastifyReply) {
-    User.find().then((data) => {
-        return reply.send(data) //TODO: fix this
+    const user = await User.find({
+        select: {
+            name: true,
+            lastname: true,
+        },
     })
+
+    return reply.send(user) 
 }
