@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm'
 import { User } from './modules/entities/User';
 import { Product } from './modules/entities/Product';
 import fastifyJwt, { JWT } from '@fastify/jwt';
+import productRoutes from './modules/product/product.routes';
 
 //TODO Make environment variables 
 
@@ -56,6 +57,7 @@ server.addHook('preHandler', (req, res, next) => {
 })
 
 server.register(userRoutes, { prefix: 'api/users' })
+server.register(productRoutes, { prefix: 'api/products' })
 
 
 declare module "fastify" {
@@ -75,7 +77,7 @@ async function main() {
         await server.listen({ port: 3000, host: '127.0.0.1' })
 
         await server.ready()
-        console.log("radi")
+        console.log("Server running on PORT:3000")
 
     } catch (error) {
         console.error(error)

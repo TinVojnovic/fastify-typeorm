@@ -18,9 +18,6 @@ export class Product extends BaseEntity {
     @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     public updated_at: Date;
 
-    @ManyToMany((type) => User, (user) => user.products, {
-        eager: true,
-    })
-    @JoinTable()
+    @ManyToMany((type) => User, (user) => user.products)
     users: User[]
 }

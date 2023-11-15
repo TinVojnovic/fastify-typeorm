@@ -3,6 +3,7 @@ import { User } from "../entities/User";
 import { DataSource, Entity } from "typeorm";
 import { hashPassword, verifyPassword } from "../../utils/hash";
 import { AppDataSource, server } from "../../app";
+import { Product } from "../entities/Product";
 
 interface CreateUserBody {
     name: string,
@@ -15,6 +16,11 @@ interface CreateUserBody {
 interface LoginBody {
     email: string,
     password: string
+}
+
+interface addProductBody {
+    productID: number,
+    userID: number
 }
 
 //TODO Add error handling
@@ -38,7 +44,7 @@ export async function registerUserHandler(req: FastifyRequest, reply: FastifyRep
 }
 
 export async function getUsersHandler(req: FastifyRequest, reply: FastifyReply) {
-    const user = await User.find({
+    const users = await User.find({
         select: {
             name: true,
             lastname: true,
@@ -46,7 +52,7 @@ export async function getUsersHandler(req: FastifyRequest, reply: FastifyReply) 
         },
     })
 
-    return reply.send(user)
+    return reply.send(users)
 }
 
 export async function loginHandler(req: FastifyRequest, reply: FastifyReply) {
@@ -66,8 +72,38 @@ export async function loginHandler(req: FastifyRequest, reply: FastifyReply) {
     const correctPassword = verifyPassword(password, (await user).salt, (await user).password)
 
     if (correctPassword) {
-        return reply.send({ accessToken: server.jwt.sign( {email: (await user).email} )})
+        return reply.send({ accessToken: server.jwt.sign({ email: (await user).email }) })
     }
 
     return reply.send((await user).email)
+}
+
+//I would've made it so you don't need to pass the userID into the body of the request
+//by getting the user from the jwtToken, but authentication doesn't seem to work
+
+export async function addProduct(req: FastifyRequest, reply: FastifyReply) {
+    const { productId, userId } = <addProductBody>req.body;
+
+    const userRepo = AppDataSource.getRepository(User)
+    const productRepo = AppDataSource.getRepository(Product)
+
+    const product = productRepo.findOne({
+        where: {
+            id: productId,
+        },
+    });
+
+    const user = userRepo.findOne({
+        where: {
+            id: userId,
+        },
+        relations: {
+            products: true,
+        },
+    });
+
+    (await user).products.push(await product)
+    await userRepo.save(await user)
+
+    return reply.send({user, product})
 }
