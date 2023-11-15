@@ -13,10 +13,10 @@ export function hashPassword(password: string) {
     return { hash, salt }
 }
 
-export function verifyPassword({ candidatePassword, salt, hash }: { candidatePassword: string, salt: string, hash: string }) {
+export function verifyPassword(candidatePassword: string, salt: string, hash: string) {
     const candidateHash = crypto
         .pbkdf2Sync(candidatePassword, salt, 1000, 64, "sha512")
         .toString("hex")
 
-    return candidateHash === candidatePassword;
+    return candidateHash === hash;
 }
