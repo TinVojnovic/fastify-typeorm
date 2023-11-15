@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 import { User } from './User';
+import { Adress } from './Adress';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -18,6 +19,6 @@ export class Product extends BaseEntity {
     @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     public updated_at: Date;
 
-    @ManyToMany((type) => User, (user) => user.products)
-    users: User[]
+    @ManyToMany((type) => Adress, (adress) => adress.products)
+    adresses: Adress[]
 }

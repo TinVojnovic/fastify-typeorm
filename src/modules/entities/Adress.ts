@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToMany, CreateDateColumn, UpdateDateColumn, JoinTable, ManyToOne } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToMany, CreateDateColumn, UpdateDateColumn, JoinTable, ManyToOne, OneToMany } from 'typeorm'
 import { Product } from './Product';
 import { User } from './User';
 
@@ -33,4 +33,11 @@ export class Adress extends BaseEntity {
 
     @ManyToOne(() => User, (user) => user.adresses)
     user: User
+
+    @ManyToMany((type) => Product, (product) => product.adresses, {
+        eager: true,
+        cascade: true
+    })
+    @JoinTable()
+    products: Product[]
 }

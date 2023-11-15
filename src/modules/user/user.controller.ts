@@ -20,11 +20,6 @@ interface LoginBody {
     password: string
 }
 
-interface addProductBody {
-    productId: number,
-    userId: number
-}
-
 //TODO Add error handling
 
 export async function registerUserHandler(req: FastifyRequest, reply: FastifyReply) {
@@ -91,7 +86,7 @@ export async function loginHandler(req: FastifyRequest, reply: FastifyReply) {
 //I would've made it so you don't need to pass the userID into the body of the request
 //by getting the user from the jwtToken, but authentication doesn't seem to work
 
-export async function addProduct(req: FastifyRequest, reply: FastifyReply) {
+/*export async function addProduct(req: FastifyRequest, reply: FastifyReply) {
     const { productId, userId } = <addProductBody>req.body;
 
     const userRepo = AppDataSource.getRepository(User)
@@ -117,4 +112,4 @@ export async function addProduct(req: FastifyRequest, reply: FastifyReply) {
     await userRepo.save(await user)
 
     return reply.send({ user, product })
-}
+}*/

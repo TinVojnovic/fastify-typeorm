@@ -32,12 +32,4 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Adress, (adress) => adress.user)
     adresses: Adress[]
-
-
-    @ManyToMany((type) => Product, (product) => product.users, {
-        eager: true,
-        cascade: true
-    })
-    @JoinTable()
-    products: Product[]
 }
